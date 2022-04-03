@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "152575887242",
+    "project_id": "sawarii-5e22a",
+    "storage_bucket": "sawarii-5e22a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:152575887242:android:bead3160e89bad5926ea73",
+        "android_client_info": {
+          "package_name": "com.blockchain.sawari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "152575887242-0436h6a1h38kdv194c0dfvruvqma14f7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blockchain.sawari",
+            "certificate_hash": "2320a042250b19690c64964212189eecbd181742"
+          }
+        },
+        {
+          "client_id": "152575887242-kfqee096ufq1psru9h4td7e23ge8c014.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKGiqin6j5qumS2Gb0jqOb3aHrBesVAWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "152575887242-kfqee096ufq1psru9h4td7e23ge8c014.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
