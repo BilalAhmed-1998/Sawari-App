@@ -2,14 +2,21 @@
 
 import 'package:flutter/material.dart';
 
+
+
+
+
+
+
+
+
+
 List<CategoryCar> CarTypesList = [
   CategoryCar(title: "Ride", image: 'assets/images/mini.png'),
   CategoryCar(title: "AC Ride", image: 'assets/images/go.png'),
   CategoryCar(title: "VIP", image: 'assets/images/vip.png'),
   CategoryCar(title: "Bike", image: 'assets/images/bike.png'),
 ];
-
-
 
 class CategoryCar {
   String image;

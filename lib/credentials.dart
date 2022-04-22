@@ -1,6 +1,6 @@
-library sawari_fyp.globals;
 
 import 'package:sawari/Classes/RideDetails.dart';
+import 'package:sawari/Services/DatabaseCollection.dart';
 
   String fName = 'Driver';
   String lName = '';
@@ -29,16 +29,10 @@ import 'package:sawari/Classes/RideDetails.dart';
   dynamic P_profilePic;
 
   //RideDetails//
-  RideDetails rideDetails;
-
-  //var channel = IOWebSocketChannel.connect(Uri.parse('ws://localhost:1234'));
+   RideDetails rideDetails = RideDetails();
 
 
-
-
-
-
-
+DatabaseCollection dbMain = DatabaseCollection();
 
 
 

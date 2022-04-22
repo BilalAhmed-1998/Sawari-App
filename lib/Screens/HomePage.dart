@@ -1,5 +1,9 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, prefer_final_fields, unnecessary_this
 
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -13,12 +17,16 @@ import 'package:sawari/Screens/LoadingScreen.dart';
 import 'package:sawari/Screens/LoginPage.dart';
 import 'package:sawari/Screens/SearchScreen.dart';
 import 'package:sawari/Screens/driver_homepage.dart';
+import 'package:sawari/Screens/rideAcceptancePage.dart';
 import 'package:sawari/Services/AuthService.dart';
 import 'package:sawari/Services/DataChangesOverTime.dart';
+import 'package:sawari/Services/DatabaseCollection.dart';
 import 'package:sawari/Services/httpMethods.dart';
-import 'package:sawari/credentials.dart' as globals;
+import 'package:sawari/credentials.dart';
 
+import '../credentials.dart';
 import 'DriverRegPage.dart';
+import 'LoadingScreenButton.dart';
 
 
 
@@ -46,7 +54,10 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   DirectionDetails directionDetails;
 
@@ -55,10 +66,20 @@ class _HomePageState extends State<HomePage> {
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylineSet = {};
   GoogleMapController myMapController;
+  Completer<GoogleMapController> _controller = Completer();
   Set<Marker> markers ={};
   Set<Circle> circles ={};
 
   String addHome = "Add Home";
+  @override
+  void dispose() {
+    _disposeController();
+    super.dispose();
+  }
+
+  Future<void> _disposeController() async {
+   myMapController.dispose();
+  }
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -100,12 +121,7 @@ class _HomePageState extends State<HomePage> {
     addHome =Provider.of<DataChangesOverTime>(
         context).pickupLocation != null ? Provider.of<DataChangesOverTime>(context).pickupLocation.placeName : "Add Home";
 
-    String decodedAddress = "";
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    //Position currentPosition;
-    //var geolocator = Geolocator();
 
 
 
@@ -129,11 +145,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     CircleAvatar(
                       backgroundColor: Colors.transparent,
-                      child: globals.profilePic != null
+                      child: profilePic != null
                           ? ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: Image.file(
-                          globals.profilePic,
+                          profilePic,
                           fit: BoxFit.fitWidth,
                         ),
                       )
@@ -146,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       width: 20,
                     ),
                     Text(
-                      globals.fName,
+                      fName,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
@@ -216,32 +232,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pop();
                   },
                 ),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.app_registration,
-                //     color: Colors.cyan,
-                //   ),
-                //   title: Text("Online Registration"),
-                //   horizontalTitleGap: 0,
-                //   onTap: () {
-                //     if(globals.regDone==false)
-                //     {
-                //       Navigator.of(context).pushNamed(DriverRegPage.routeName);
-                //     }
-                //     else
-                //     {
-                //       showDialog(
-                //           context: context,
-                //           builder: (_) => AlertDialog(
-                //             content: Text('You are already registered!!',
-                //               textAlign: TextAlign.center,),
-                //             contentPadding: EdgeInsets.symmetric(vertical: 50),
-                //           )
-                //       );
-                //     }
-                //
-                //   },
-                // ),
+
                 ListTile(
                   leading: Icon(
                     Icons.logout,
@@ -318,14 +309,16 @@ class _HomePageState extends State<HomePage> {
       body: Stack(children: [
         Container(
           child: GoogleMap(
+
             initialCameraPosition: CameraPosition(
               target: LatLng(58.42796133580664, -122.085749655962),
               zoom: 14.4746,
             ),
-            myLocationButtonEnabled: true,
+
+            myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             myLocationEnabled: true,
-            zoomGesturesEnabled: true,
+            zoomGesturesEnabled: false,
             mapType: MapType.normal,
             polylines: polylineSet,
             markers: markers,
@@ -444,15 +437,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ]),
 
-                        // child: ListView.builder(
-                        //
-                        //     shrinkWrap: false,
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: CarTypesList.length,
-                        //     itemBuilder: (context, index) {
-                        //       return CategoryCard(
-                        //           data: CarTypesList[index], height: 80);
-                        //     }),
+
                       ),
                       SizedBox(
                         height: 20.0,
@@ -474,7 +459,6 @@ class _HomePageState extends State<HomePage> {
                           await getPlaceDirection();
 
                          }
-                         // var res = await Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchScreen()));
 
                         },
                         child: Container(
@@ -826,25 +810,73 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                     onPressed: () async{
 
+
+
                       showDialog(
                           context: context,
-                          builder: (BuildContext context) => LoadingScreen(
+                          builder: (BuildContext context) => LoadingScreenButton(
                             msg: "Searching for Driver",
                           ));
 
-                      await Future.delayed(const Duration(seconds: 5), (){});
-                      Navigator.pop(context);
 
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => DriverLoadingScreen());
+                      for (var i=0;i<4;i++) {
+                        if (widget.isSelected[i] == true) {
+                          rideDetails.carType = i;
+                          break;
+                        }
+                      }
+
+                      rideDetails.dateTime = Timestamp.now();
+                      rideDetails.fare = httpMethods.calculateTax(directionDetails);
+                      rideDetails.pickup = Provider.of<DataChangesOverTime>(context, listen: false).pickupLocation;
+                      rideDetails.dropOff = Provider.of<DataChangesOverTime>(context, listen: false).dropoffLocation;
+
+                      await DatabaseCollection().bookPassengerRide(rideDetails);
+
+                      dbMain.onGoingRides.snapshots().listen((querySnapshot) {
+                        querySnapshot.docChanges.forEach((change) async {
+                         if( change.doc.get('status') == 'Accepted' && change.doc.id == FirebaseAuth.instance.currentUser.uid){
 
 
-                      globals.rideDetails.pickUpAdress =  addHome;
-                      globals.rideDetails.fare = httpMethods.calculateTax(directionDetails);
+                           String driverName;
+                           String driverPhone;
+                           String driverCar;
+                           double rating;
+                           GeoPoint driverCoordinates;
+                           GeoPoint userCoordinates;
+                           await dbMain.onGoingRides.doc(FirebaseAuth.instance.currentUser.uid).get().then((value) => {
+
+                             driverName = value.get('driverName'),
+                             driverPhone=value.get('driverPhone'),
+                             driverCar = value.get('driverCar'),
+                             rating = value.get('rating'),
+                             driverCoordinates= value.get('driverCoordinates'),
+                             userCoordinates= value.get('pickupCoordinates')
+
+                           });
 
 
-                     // Navigator.pop(context);
+                           Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => rideAcceptancePage(
+                                     Name: driverName,
+                                     Phone: driverPhone,
+                                     carName: driverCar,
+                                     rating: rating,
+                                     driverCoordinates: driverCoordinates,
+                                     userCoordinates: userCoordinates
+                                   ),
+                               )
+                           );
+
+                         }
+                          // Do something with change
+                        });
+                      });
+
+
+
 
 
                     },
@@ -923,8 +955,7 @@ class _HomePageState extends State<HomePage> {
 
     Navigator.pop(context);
 
-    print("ENCODED POINTS:-");
-    print(details.encodedPoints);
+
 
 
     PolylinePoints polylinePoints = PolylinePoints();
@@ -1038,7 +1069,5 @@ class _HomePageState extends State<HomePage> {
 
   }
 
-  void calculateDistance(){
 
-  }
 }

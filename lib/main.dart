@@ -10,6 +10,7 @@ import 'package:sawari/Screens/SplashScreen.dart';
 import 'package:sawari/Screens/WelcomePage.dart';
 import 'package:sawari/Screens/RegisterPage.dart';
 import 'package:sawari/Routes.dart';
+import 'package:sawari/Screens/driver_homepage.dart';
 import 'package:sawari/Screens/login_page.dart';
 //import 'package:sawari/SignUp.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp( MyApp());
+
 }
 
 class MyApp extends StatelessWidget {

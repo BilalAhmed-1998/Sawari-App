@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sawari/Screens/HomePage.dart';
 import 'package:sawari/Screens/LoadingScreen.dart';
+import 'package:sawari/Screens/LoadingScreenButton.dart';
 import 'package:sawari/Screens/RegisterPage.dart';
 import 'package:sawari/Screens/LoginPage.dart';
 import 'package:sawari/Screens/SearchScreen.dart';
 import 'package:sawari/Screens/SplashScreen.dart';
 import 'package:sawari/Screens/WelcomePage.dart';
+import 'package:sawari/Screens/driverConfirmationPage.dart';
 import 'package:sawari/Screens/driver_homepage.dart';
 import 'package:sawari/Screens/login_page.dart';
 import 'package:sawari/Services/Wrap.dart';
@@ -41,6 +43,8 @@ final Map <String,WidgetBuilder> routes =  {
   VerifyPage.routeName: (context) => VerifyPage(),
   HomePage.routeName: (context) => HomePage(),
   LoadingScreen.routeName: (context) => LoadingScreen(msg: "Loading Please Wait..."),
+  LoadingScreenButton.routeName: (context) => LoadingScreenButton(),
+  driverConfirmationPage.routeName: (context) => driverConfirmationPage(),
   //SignUp.routeName: (context) => SignUp(),
   DriverRegPage.routeName: (context) => DriverRegPage(),
   DriverProfilePage.routeName: (context) => DriverProfilePage(),

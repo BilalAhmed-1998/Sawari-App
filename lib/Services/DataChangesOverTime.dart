@@ -6,6 +6,7 @@ import 'package:sawari/Classes/Address.dart';
 class DataChangesOverTime extends ChangeNotifier {
   Address pickupLocation, dropoffLocation;
 
+
    void updatePickUpLocationAddress(Address pickupAddress) {
     pickupLocation = pickupAddress;
     notifyListeners();

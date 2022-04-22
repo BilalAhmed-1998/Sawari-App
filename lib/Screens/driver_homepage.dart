@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sawari/Cards/onGoingRidesCard.dart';
 import 'package:sawari/Screens/DriverRegPage.dart';
+import 'package:sawari/Screens/LoadingScreen.dart';
 import 'package:sawari/credentials.dart' as globals;
 import 'package:flutter_switch/flutter_switch.dart';
 
@@ -16,7 +19,7 @@ class driver_homepage extends StatefulWidget {
 }
 
 class _driver_homepageState extends State<driver_homepage> {
-  bool status = false;
+  bool status = true;
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -242,15 +245,16 @@ class _driver_homepageState extends State<driver_homepage> {
               height: 10,
             ),
             FlutterSwitch(
-              width: 160.0,
+
+              width: 140.0,
               height: 40.0,
               activeText: 'ONLINE',
               inactiveText: 'OFFLINE',
               activeColor: Colors.green,
-              valueFontSize: 25.0,
-              toggleSize: 45.0,
+              valueFontSize: 20.0,
+              toggleSize: 35.0,
               value: status,
-              borderRadius: 30.0,
+              borderRadius: 40.0,
               padding: 8.0,
               showOnOff: true,
               onToggle: (val) {
@@ -260,13 +264,44 @@ class _driver_homepageState extends State<driver_homepage> {
               },
             ),
             (status)
-            ?Container(
-              child: Row(
-                children: [
+            ?Flexible(
+              flex: 1,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance.collection("onGoingRides").snapshots(),
+                  builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                    return
+                      ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context,index){
+                        DocumentSnapshot ride = snapshot.data.docs[index];
+                        return
+                          onGoingRideCard(
+                            rideId: ride['uidPassenger'],
+                          passengerName: ride['passengerName'],
+                          passengerPhone: ride['passengerPhone'],
+                          pickup: ride['pickup'],
+                          dropOff: ride['dropOff'],
+                          pickupCoordinates: ride['pickupCoordinates'],
+                          dropoffCoordinates: ride['dropoffCoordinates'],
+                          fare: ride['fare'],
+                          timestamp: ride['timeOfRideRequest'],
+                        );
 
-                ],
-              ),
-            )
+                        }
+                    );
+
+                  }else{
+
+                    return CircularProgressIndicator();
+
+                  }
+
+
+
+                  })
+              )
+
             :Container(),
           ],
         ),

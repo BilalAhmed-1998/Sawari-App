@@ -8,10 +8,7 @@ class ouruser {
   String token;
   String photo;
 
-  int _votes;
-  int _trips;
-  double _rating;
-
+  ouruser({this.phone,this.email,this.name,this.id,this.photo,this.token});
 
 // //  getters
 //   String get name => _name;
