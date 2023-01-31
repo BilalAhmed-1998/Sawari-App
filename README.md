@@ -1,16 +1,11 @@
-# sawari
+# sawari (Ride Hailing Service App)
 
-A new Flutter project.
+The Ride-Hailing Service App is a decentralized platform that leverages the power of blockchain technology. It provides a seamless and secure ride-hailing experience for users. The app is similar to a conventional ride-hailing app, but with the added security and transparency of the Ethereum blockchain.
 
-## Getting Started
+Key features of the Ride-Hailing Service App include:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Deployed on the Ethereum test network, utilizing a smart contract written in Solidity
+Integration with Google Maps APIs, including Places API, Directions API, Location, geocoding, and reverse geocoding
+Decentralized platform that ensures security and transparency for users
+Functionality similar to a traditional ride-hailing app, providing a seamless experience for users.
+This app showcases the ability to implement blockchain technology in a practical and user-friendly manner, making it a valuable addition to any software developer's portfolio.
